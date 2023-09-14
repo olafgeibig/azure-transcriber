@@ -2,10 +2,7 @@ import time
 import uuid
 from dotenv import load_dotenv
 import os
-
 from scipy.io import wavfile
-from pydub import AudioSegment
-from scipy.signal import resample
 
 load_dotenv()
 AZURE_AI_KEY = os.environ.get('AZURE_AI_KEY')
@@ -106,8 +103,3 @@ def conversation_transcription_from_microphone():
             print('Stopping async recognition.')
             transcriber.stop_transcribing_async()
             break
-
-import streamlit as st
-
-    
-from audio_handler import convert_mp3_to_wav
