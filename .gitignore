@@ -1,0 +1,6 @@
+azure-transcription
+.aider*
+.vscode
+.env
+*.wav
+flagged
