@@ -1,5 +1,5 @@
 import streamlit as st
-from azure_transcription import conversation_transcription
+from transcriber import conversation_transcription
 
 def main():
     st.title("Azure Transcription")

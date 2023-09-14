@@ -1,12 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
-"""
-Conversation transcription samples for the Microsoft Cognitive Services Speech SDK
-"""
-
 import time
 import uuid
 from dotenv import load_dotenv
@@ -32,17 +23,6 @@ except ImportError:
     import sys
     sys.exit(1)
 
-# Set up the subscription info for the Speech Service:
-# Replace with your own subscription key and service region (e.g., "centralus").
-# See the limitations in supported regions,
-# https://docs.microsoft.com/azure/cognitive-services/speech-service/how-to-use-conversation-transcription
-speech_key, service_region = "YourSubscriptionKey", "YourServiceRegion"
-
-# This sample uses a wavfile which is captured using a supported Speech SDK devices (8 channel, 16kHz, 16-bit PCM)
-# See https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-devices-sdk-microphone
-conversationfilename = "./audio1.wav"
-
-
 # This sample demonstrates how to use conversation transcription.
 def conversation_transcription(conversationfilename):
     """transcribes a conversation"""
@@ -51,7 +31,7 @@ def conversation_transcription(conversationfilename):
 
     channels = 1
     bits_per_sample = 16
-    samples_per_second = 44100
+    samples_per_second = 16000
 
     # Create audio configuration using the push stream
     wave_format = speechsdk.audio.AudioStreamFormat(samples_per_second, bits_per_sample, channels)

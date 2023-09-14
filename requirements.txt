@@ -1,3 +1,5 @@
+python-dotenv
+pydub
 langchain
 openai
 scipy
