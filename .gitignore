@@ -4,3 +4,4 @@ azure-transcriber
 .env
 *.wav
 flagged
+__pycache__

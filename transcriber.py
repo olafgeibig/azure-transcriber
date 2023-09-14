@@ -109,9 +109,6 @@ def conversation_transcription_from_microphone():
 
 import streamlit as st
 
-# Set the maximum upload size to 200MB
-st.set_option('server.maxUploadSize', 200)  # 200 MB
-
 def main():
     st.title("Azure Meting Transcription")
     uploaded_file = st.file_uploader("Choose a file", type=["mp3"])
