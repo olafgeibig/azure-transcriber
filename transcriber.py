@@ -21,7 +21,7 @@ except ImportError:
     sys.exit(1)
 
 # This sample demonstrates how to use conversation transcription.
-def conversation_transcription(conversationfilename):
+def conversation_transcription(conversationfilename, callback):
     """transcribes a conversation"""
     # Creates speech configuration with subscription information
     speech_config = speechsdk.SpeechConfig(subscription=AZURE_AI_KEY, region=AZURE_AI_REGION)
@@ -46,7 +46,7 @@ def conversation_transcription(conversationfilename):
         done = True
 
     # Subscribe to the events fired by the conversation transcriber
-    transcriber.transcribed.connect(lambda evt: transcriptions.append(str(evt.result.speaker_id) + ": " + str(evt.result.text)))
+    transcriber.transcribed.connect(lambda evt: callback(str(evt.result.speaker_id) + ": " + str(evt.result.text)))
     transcriber.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
     transcriber.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
     transcriber.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
@@ -65,7 +65,7 @@ def conversation_transcription(conversationfilename):
 
     transcriber.stop_transcribing_async()
 
-    return transcriptions
+    return
 
 
 # This sample demonstrates how to use conversation transcription.
