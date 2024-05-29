@@ -3,14 +3,9 @@ import time
 from audiofile import convert_mp3_to_wav, convert_m4a_to_wav
 from threading import Thread
 from streamlit.runtime.scriptrunner import add_script_run_ctx
-from transcriber import ConversationTranscriber
+from test_transcriber import ConversationTranscriber
 from streamlit.components.v1 import html
 import streamlit_scrollable_textbox as stx
-
-
-# Update the UI with a text area to display transcriptions
-def update_transcriptions():
-    st.text_area("Transcriptions", "\n".join(st.session_state.transcriptions), height=400)
 
 # Notify function to update transcriptions
 def notify(event):
@@ -18,8 +13,9 @@ def notify(event):
     if 'transcriptions' not in st.session_state:
         st.session_state.transcriptions = []
     text = str(event.result.speaker_id) + ": " + str(event.result.text)
+    print(text)
     st.session_state.transcriptions.append(text)
-    update_transcriptions()
+    st.text_area("Transcriptions", "\n".join(st.session_state.transcriptions), height=400)
 
 # Main function
 def main():
@@ -27,6 +23,8 @@ def main():
     if 'transcriptions' not in st.session_state:
         st.session_state.transcriptions = []
     
+    add_script_run_ctx(notify)
+
     st.set_page_config(
         page_title = "Azure Meeting Transcription",
         page_icon = "💬",
@@ -45,16 +43,15 @@ def main():
         elif file_extension == "m4a":
             with st.spinner('Converting m4a to wav format...'):
                 convert_m4a_to_wav(uploaded_file, wav_file_path)
+        elif file_extension == "wav":
+            wav_file_path = uploaded_file
     else:
-        # Assuming the file is already a wav file
-        if uploaded_file is not None:
-            with open(wav_file_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+        st.warning("Please upload an audio file.")
+        return
 
     # Transcribe the wav file
     with st.spinner('Transcribing audio file...'):
         transcriber = ConversationTranscriber(notify)
-        transcriber.init_transcription()
         transcriber.transcribe(wav_file_path)
 
 # Call main function

@@ -1,6 +1,7 @@
 import time
 import random
 import threading
+from streamlit.runtime.scriptrunner import add_script_run_ctx
 
 class ConversationTranscriber():
  
@@ -9,9 +10,6 @@ class ConversationTranscriber():
         self.running=True
         random.seed(5)
 
-    def init_transcription(self):
-        pass
-
     def transcribe(self, filename: str):
         def dummy():
             while self.running:
@@ -19,7 +17,7 @@ class ConversationTranscriber():
                 event = Object(result=result)
                 self.callback(event)
                 time.sleep(1)
-        t = threading.Thread(target=dummy)
+        t = threading.Thread(target=add_script_run_ctx(dummy))
         t.start()
 
     def stop(self):

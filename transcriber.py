@@ -28,31 +28,22 @@ class ConversationTranscriber():
         audio_config = speechsdk.audio.AudioConfig(stream=self.stream)
         self.transcriber = speechsdk.transcription.ConversationTranscriber(speech_config, audio_config) #, language="de-DE")
         
-        done = False
-
-        def stop_cb(evt: speechsdk.SessionEventArgs):
-            """callback that signals to stop continuous transcription upon receiving an event `evt`"""
-            print('CLOSING {}'.format(evt))
-            nonlocal done
-            done = True
-
         # Subscribe to the events fired by the conversation transcriber for debugging
-        self.transcriber.transcribed.connect(lambda evt: print('TRANSCRIBED: {}'.format(evt))) #callback)
+        self.transcriber.transcribed.connect(callback)
+        # self.transcriber.transcribed.connect(lambda evt: print('TRANSCRIBED: {}'.format(evt)))
         # self.transcriber.transcribed.connect(lambda evt: print(str(evt.result.speaker_id) + ": " + str(evt.result.text)))
         self.transcriber.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
         self.transcriber.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
-        self.transcriber.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+        # self.transcriber.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+
+        def stop_cb(self, evt: speechsdk.SessionEventArgs):
+            """callback that signals to stop continuous transcription upon receiving an event `evt`"""
+            print('CLOSING {}'.format(evt))
+            # nonlocal done
+            self.done = True
+
         self.transcriber.session_stopped.connect(stop_cb)
         self.transcriber.canceled.connect(stop_cb)
-        
-    def init_transcription(self):
-        """
-        Starts the transcription process asynchronously.
-
-        Returns:
-            An instance of the TranscriptionResult class representing the transcription result.
-        """ 
-        return self.transcriber.start_transcribing_async()
 
     def transcribe(self, filename: str):
         """
@@ -61,10 +52,15 @@ class ConversationTranscriber():
         Args:
             filename (str): The path to the audio file to transcribe.
         """
+        self.done = False
+
+        self.transcriber.start_transcribing_async()
         # Read the whole wave files at once and stream it to sdk
         _, wav_data = wavfile.read(filename)
         self.stream.write(wav_data.tobytes())
         self.stream.close()
+        while not self.done:
+            time.sleep(.5)
 
     def stop(self):
         """
