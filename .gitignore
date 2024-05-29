@@ -5,3 +5,5 @@ azure-transcriber
 *.wav
 flagged
 __pycache__
+.venv
+.DS_Store
