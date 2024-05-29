@@ -20,3 +20,19 @@ def convert_mp3_to_wav(mp3_file_path, output_wav_file_path):
     resampled_data = resample(data, int(len(data) * 16000 / rate))
     wavfile.write(output_wav_file_path, 16000, resampled_data.astype(np.int16))
 
+def convert_m4a_to_wav(m4a_file_path, output_wav_file_path):
+    """
+    Converts an m4a file to a mono wav file with 16bit 16kHz sampling rate.
+
+    Args:
+        m4a_file_path (str): Path to the input m4a file.
+        output_wav_file_path (str): Path to the output wav file.
+    """
+    audio = AudioSegment.from_file(m4a_file_path, format="m4a")
+    audio = audio.set_channels(1)
+    audio.export(output_wav_file_path, format="wav")
+
+    # Resample the wav file to 16kHz
+    rate, data = wavfile.read(output_wav_file_path)
+    resampled_data = resample(data, int(len(data) * 16000 / rate))
+    wavfile.write(output_wav_file_path, 16000, resampled_data.astype(np.int16))
