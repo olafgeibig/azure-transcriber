@@ -26,16 +26,24 @@ class ConversationTranscriber():
         wave_format = speechsdk.audio.AudioStreamFormat(16000, 16, 1)
         self.stream = speechsdk.audio.PushAudioInputStream(stream_format=wave_format)
         audio_config = speechsdk.audio.AudioConfig(stream=self.stream)
-        self.transcriber = speechsdk.transcription.ConversationTranscriber(speech_config, audio_config, language="de-DE")
+        self.transcriber = speechsdk.transcription.ConversationTranscriber(speech_config, audio_config) #, language="de-DE")
         
+        done = False
+
+        def stop_cb(evt: speechsdk.SessionEventArgs):
+            """callback that signals to stop continuous transcription upon receiving an event `evt`"""
+            print('CLOSING {}'.format(evt))
+            nonlocal done
+            done = True
+
         # Subscribe to the events fired by the conversation transcriber for debugging
-        self.transcriber.transcribed.connect(callback)
+        self.transcriber.transcribed.connect(lambda evt: print('TRANSCRIBED: {}'.format(evt))) #callback)
         # self.transcriber.transcribed.connect(lambda evt: print(str(evt.result.speaker_id) + ": " + str(evt.result.text)))
         self.transcriber.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
         self.transcriber.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
         self.transcriber.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
-        # self.transcriber.session_stopped.connect(stop_cb)
-        # self.transcriber.canceled.connect(stop_cb)
+        self.transcriber.session_stopped.connect(stop_cb)
+        self.transcriber.canceled.connect(stop_cb)
         
     def init_transcription(self):
         """
