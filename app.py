@@ -44,8 +44,6 @@ def main():
             # print(full)
             display.write(full)
             last = now
-    
-
 
     # print([k for k in st.session_state])
 

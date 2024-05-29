@@ -9,8 +9,17 @@ AZURE_AI_KEY = os.environ.get('AZURE_AI_KEY')
 AZURE_AI_REGION = os.environ.get('AZURE_AI_REGION')
 
 class ConversationTranscriber():
+    """
+    Class for transcribing conversations using Azure Speech Services.
+    """
  
     def __init__(self, callback: callable):
+        """
+        Initializes a new instance of the ConversationTranscriber class.
+
+        Args:
+            callback (callable): The callback function to handle transcribed events.
+        """
         speech_config = speechsdk.SpeechConfig(subscription=AZURE_AI_KEY, region=AZURE_AI_REGION)
 
         # Create audio configuration using the push stream
@@ -28,14 +37,29 @@ class ConversationTranscriber():
         # self.transcriber.session_stopped.connect(stop_cb)
         # self.transcriber.canceled.connect(stop_cb)
         
-    def init_transcription(self)
+    def init_transcription(self):
+        """
+        Starts the transcription process asynchronously.
+
+        Returns:
+            An instance of the TranscriptionResult class representing the transcription result.
+        """ 
         return self.transcriber.start_transcribing_async()
 
     def transcribe(self, filename: str):
+        """
+        Transcribes the audio file specified by the given filename.
+
+        Args:
+            filename (str): The path to the audio file to transcribe.
+        """
         # Read the whole wave files at once and stream it to sdk
         _, wav_data = wavfile.read(filename)
         self.stream.write(wav_data.tobytes())
         self.stream.close()
 
     def stop(self):
+        """
+        Stops the transcription process asynchronously.
+        """
         self.transcriber.stop_transcribing_async()
