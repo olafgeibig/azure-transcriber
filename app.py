@@ -3,9 +3,10 @@ import time
 from audiofile import convert_mp3_to_wav, convert_m4a_to_wav
 from threading import Thread
 from streamlit.runtime.scriptrunner import add_script_run_ctx
-from test_transcriber import ConversationTranscriber
+from transcriber import ConversationTranscriber
 from streamlit.components.v1 import html
 import streamlit_scrollable_textbox as stx
+
 
 # Update the UI with a text area to display transcriptions
 def update_transcriptions():
